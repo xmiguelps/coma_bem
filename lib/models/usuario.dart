@@ -1,4 +1,4 @@
-class Usuario {
+abstract class Usuario {
   int _idUsuario;
   String _nomeUsuario;
   String _email;
@@ -26,4 +26,7 @@ class Usuario {
       print("Erro: a senha deve ter pelo menos 6 caracteres.");
     }
   }
+
+  void exibirMenu();
+  void gerenciarConta();
 }
