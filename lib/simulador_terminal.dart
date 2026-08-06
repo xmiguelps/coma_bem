@@ -1,0 +1,51 @@
+import 'dart:io';
+import 'models/usuario.dart';
+import 'models/cliente.dart';
+import 'models/administrador.dart';
+
+void main() {
+  List<Usuario> usuariosCadastrados = [];
+  bool sistemaRodando = true;
+
+  print("=== BEM-VINDO AO SIMULADOR DE OBJETOS COMA BEM ===");
+
+  while (sistemaRodando) {
+    print('\nSelecione uma ação:');
+    print('1 - Cadastrar novo Cliente');
+    print('2 - Cadastrar novo Administrador');
+    print('3 - Listar perfis e exibir Menus (Testar Polimorfismo)');
+    print('4 - Sair do Sistema');
+    stdout.write('Sua opção: ');
+    String? opcao = stdin.readLineSync();
+
+switch (opcao) {
+  case '1':
+    print('\n--- CADASTRO DE CLIENTE ---');
+    stdout.write('Digite o nome do cliente: ');
+    String? nome = stdin.readLineSync();
+
+    print('Ops, a lógica do Desafio 1 ainda não foi feita!');
+    break;
+  case '2':
+    print('\n--- CADASTRO DE ADMINISTRADOR ---');
+    stdout.write('Digite o nome do administrador: ');
+    String? nomeAdmin = stdin.readLineSync();
+
+    print('Ops, a lógica do Desafio 2 ainda não foi feita!');
+    break;
+
+  case '3':
+    print('\n--- LISTAGEM DE USUÁRIOS ---');
+
+    print('Ops, a lógica do Desafio 3 ainda não foi feita!');
+    break;
+  case '4':
+    sistemaRodando = false;
+    print('\nEncerrando o simulador... Até logo!');
+  break;
+
+  default:
+    print('\nOpção inválida! Digite um número de 1 a 4.');
+    
+  }}
+}
