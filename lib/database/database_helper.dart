@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 /// e realizar as transações de autenticação, inserção, consulta, alteração e deleção.
 class DatabaseHelper {
   static final DatabaseHelper _instancia = DatabaseHelper._interno();
+  static DatabaseHelper get instancia => _instancia;
   static Database? _bancoDeDados;
 
   factory DatabaseHelper() => _instancia;
@@ -171,7 +172,7 @@ class DatabaseHelper {
         print('Aviso: Nenhum prato encontrado com o ID $idPrato.');
       }
     } catch (erro) {
-      print('Erro ao tentar remover o prato: \$erro');
+      print('Erro ao tentar remover o prato: $erro');
     }
   }
 
