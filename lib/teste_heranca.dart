@@ -5,7 +5,12 @@ import 'models/usuario.dart';
 
 void main() {
   Cliente cliente = Cliente(1, 'João', 'joao@email.com', '123456');
-  Administrador admin = Administrador(2, 'Chefia', 'admin@comabem.com', 'admin123');
+  Administrador admin = Administrador(
+    2,
+    'Chefia',
+    'admin@comabem.com',
+    'admin123',
+  );
   DonoRestaurante dono = DonoRestaurante(
     3,
     'Sra. Bella',

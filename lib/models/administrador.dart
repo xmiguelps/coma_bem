@@ -1,18 +1,17 @@
 import 'usuario.dart';
 
+/// Perfil com acesso total ao sistema.
 class Administrador extends Usuario {
-  Administrador(int id, String nome, String email, String senha)
-      : super(id, nome, email, senha);
+  Administrador(super.id, super.nome, super.email, super.senha);
 
   @override
-  void exibirMenu() {
-    print('--- Painel do Administrador ---');
-    print('1. Aprovar novos restaurantes');
-    print('2. Banir usuários');
-  }
+  List<String> itensDoMenu() => [
+    '1. Aprovar novos restaurantes',
+    '2. Banir usuarios',
+    '3. Auditar avaliacoes',
+  ];
 
   @override
-  void gerenciarConta() {
-    print('Acesso total às configurações do sistema Coma Bem.');
-  }
+  String descricaoGerenciarConta() =>
+      'Acesso total as configuracoes do sistema Coma Bem.';
 }
