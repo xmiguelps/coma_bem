@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../components/botao_customizado.dart';
+import '../components/campo_formulario_customizado.dart';
 import '../database/database_helper.dart';
 import '../estilo.dart';
 import '../models/cliente.dart';
@@ -235,36 +237,34 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 24),
 
-        const Rotulo('E-mail'),
-        TextField(
-          controller: _email,
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.next,
-          autocorrect: false,
-          decoration: campo(dica: 'seu@email.com'),
+        CampoFormularioCustomizado(
+          titulo: 'E-mail',
+          controlador: _email,
+          dica: 'seu@email.com',
+          tipoTeclado: TextInputType.emailAddress,
+          acaoDoTeclado: TextInputAction.next,
+          corrigirTexto: false,
         ),
-        const SizedBox(height: 18),
 
-        const Rotulo('Senha'),
-        TextField(
-          controller: _senha,
-          obscureText: !_senhaVisivel,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) {
+        CampoFormularioCustomizado(
+          titulo: 'Senha',
+          controlador: _senha,
+          dica: '••••••••',
+          ocultarTexto: !_senhaVisivel,
+          acaoDoTeclado: TextInputAction.done,
+          aoEnviar: (_) {
             if (_podeEntrar && !_entrando) _entrar();
           },
-          decoration: campo(
-            dica: '••••••••',
-            sufixo: IconButton(
-              onPressed: () => setState(() => _senhaVisivel = !_senhaVisivel),
-              tooltip: _senhaVisivel ? 'Ocultar senha' : 'Mostrar senha',
-              icon: Icon(
-                _senhaVisivel
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                size: 20,
-                color: Cores.textoSuave,
-              ),
+          espacoAbaixo: 0,
+          sufixo: IconButton(
+            onPressed: () => setState(() => _senhaVisivel = !_senhaVisivel),
+            tooltip: _senhaVisivel ? 'Ocultar senha' : 'Mostrar senha',
+            icon: Icon(
+              _senhaVisivel
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 20,
+              color: Cores.textoSuave,
             ),
           ),
         ),
@@ -290,7 +290,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 14),
 
-        BotaoGrande(
+        BotaoCustomizado(
           texto: 'Entrar',
           carregando: _entrando,
           aoTocar: _podeEntrar ? _entrar : null,
@@ -312,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 22),
 
-        BotaoBranco(
+        BotaoContornado(
           texto: 'Acessar como visitante',
           icone: Icons.visibility_outlined,
           aoTocar: _entrando ? null : () => _abrirInicio(null),
@@ -422,41 +422,39 @@ class _DialogoCriarContaState extends State<_DialogoCriarConta> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Rotulo('Nome'),
-            TextField(
-              controller: _nome,
-              textCapitalization: TextCapitalization.words,
-              textInputAction: TextInputAction.next,
-              decoration: campo(dica: 'Como quer ser chamado'),
+            CampoFormularioCustomizado(
+              titulo: 'Nome',
+              controlador: _nome,
+              dica: 'Como quer ser chamado',
+              capitalizacao: TextCapitalization.words,
+              acaoDoTeclado: TextInputAction.next,
+              espacoAbaixo: 16,
             ),
-            const SizedBox(height: 16),
 
-            const Rotulo('E-mail'),
-            TextField(
-              controller: _email,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              autocorrect: false,
-              decoration: campo(
-                dica: 'seu@email.com',
-              ).copyWith(errorText: _erroEmail),
+            CampoFormularioCustomizado(
+              titulo: 'E-mail',
+              controlador: _email,
+              dica: 'seu@email.com',
+              tipoTeclado: TextInputType.emailAddress,
+              acaoDoTeclado: TextInputAction.next,
+              corrigirTexto: false,
+              erro: _erroEmail,
+              espacoAbaixo: 16,
             ),
-            const SizedBox(height: 16),
 
-            const Rotulo('Senha'),
-            TextField(
-              controller: _senha,
-              obscureText: true,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) {
+            CampoFormularioCustomizado(
+              titulo: 'Senha',
+              controlador: _senha,
+              dica: 'Mínimo de 6 caracteres',
+              ocultarTexto: true,
+              acaoDoTeclado: TextInputAction.done,
+              aoEnviar: (_) {
                 if (_podeSalvar && !_salvando) _salvar();
               },
-              decoration: campo(dica: 'Mínimo de 6 caracteres').copyWith(
-                errorText:
-                    _senha.text.isNotEmpty && !Usuario.senhaValida(_senha.text)
-                    ? 'A senha precisa ter pelo menos 6 caracteres.'
-                    : null,
-              ),
+              erro: _senha.text.isNotEmpty && !Usuario.senhaValida(_senha.text)
+                  ? 'A senha precisa ter pelo menos 6 caracteres.'
+                  : null,
+              espacoAbaixo: 0,
             ),
           ],
         ),

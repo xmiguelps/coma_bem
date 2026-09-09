@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../components/botao_customizado.dart';
+import '../components/campo_formulario_customizado.dart';
 import '../database/database_helper.dart';
 import '../estilo.dart';
 import '../models/avaliacao.dart';
@@ -385,13 +387,13 @@ class _CadastroScreenState extends State<CadastroScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 36),
                 children: [
-                  const Rotulo('Nome do restaurante'),
-                  TextField(
-                    controller: _nome,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: campo(dica: 'Ex: Sushi Nakamura'),
+                  CampoFormularioCustomizado(
+                    titulo: 'Nome do restaurante',
+                    controlador: _nome,
+                    dica: 'Ex: Sushi Nakamura',
+                    capitalizacao: TextCapitalization.words,
+                    espacoAbaixo: 22,
                   ),
-                  const SizedBox(height: 22),
 
                   const Rotulo('Tipo de culinária'),
                   Wrap(
@@ -411,46 +413,37 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   ),
                   const SizedBox(height: 22),
 
-                  const Rotulo('Nome do prato'),
-                  TextField(
-                    controller: _prato,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: campo(dica: 'Ex: Tonkotsu Ramen'),
+                  CampoFormularioCustomizado(
+                    titulo: 'Nome do prato',
+                    controlador: _prato,
+                    dica: 'Ex: Tonkotsu Ramen',
+                    capitalizacao: TextCapitalization.words,
+                    espacoAbaixo: 22,
                   ),
-                  const SizedBox(height: 22),
 
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Rotulo('Cidade'),
-                            TextField(
-                              controller: _cidade,
-                              textCapitalization: TextCapitalization.words,
-                              decoration: campo(dica: 'Ex: São Paulo, SP'),
-                            ),
-                          ],
+                        child: CampoFormularioCustomizado(
+                          titulo: 'Cidade',
+                          controlador: _cidade,
+                          dica: 'Ex: São Paulo, SP',
+                          capitalizacao: TextCapitalization.words,
+                          espacoAbaixo: 22,
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Rotulo('Faixa de preço'),
-                            TextField(
-                              controller: _preco,
-                              decoration: campo(dica: r'Ex: R$ 68-95'),
-                            ),
-                          ],
+                        child: CampoFormularioCustomizado(
+                          titulo: 'Faixa de preço',
+                          controlador: _preco,
+                          dica: r'Ex: R$ 68-95',
+                          espacoAbaixo: 22,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 22),
 
                   const Rotulo('Geolocalização'),
                   _coordenadas(),
@@ -462,23 +455,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   _cartaoDaNota(),
                   const SizedBox(height: 22),
 
-                  const Rotulo('Recomendação pessoal'),
-                  TextField(
-                    controller: _recomendacao,
-                    maxLines: 5,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: campo(
-                      dica:
-                          'Descreva sua experiência, o que pediu, o que amou…',
-                    ),
+                  CampoFormularioCustomizado(
+                    titulo: 'Recomendação pessoal',
+                    controlador: _recomendacao,
+                    dica: 'Descreva sua experiência, o que pediu, o que amou…',
+                    linhas: 5,
+                    capitalizacao: TextCapitalization.sentences,
+                    espacoAbaixo: 22,
                   ),
-                  const SizedBox(height: 22),
 
                   const Rotulo('Foto do prato'),
                   _areaDaFoto(),
                   const SizedBox(height: 30),
 
-                  BotaoGrande(
+                  BotaoCustomizado(
                     texto: widget.ehEdicao
                         ? 'Salvar alterações'
                         : 'Salvar restaurante',
@@ -538,23 +528,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
   Widget _coordenadas() {
     Widget umCampo(String rotulo, TextEditingController controlador) {
       return Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(rotulo, style: Fonte.rotulo(tamanho: 9.5)),
-            const SizedBox(height: 6),
-            TextField(
-              controller: controlador,
-              style: Fonte.mono(),
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: true,
-              ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\-]')),
-              ],
-              decoration: campo(dica: '0.0000', mono: true),
-            ),
+        child: CampoFormularioCustomizado(
+          titulo: rotulo,
+          controlador: controlador,
+          dica: '0.0000',
+          mono: true,
+          rotuloPequeno: true,
+          espacoAbaixo: 0,
+          tipoTeclado: const TextInputType.numberWithOptions(
+            decimal: true,
+            signed: true,
+          ),
+          // So numeros, ponto, virgula e sinal de menos.
+          formatadores: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.,\-]')),
           ],
         ),
       );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../database/database_helper.dart';
+import '../components/botao_customizado.dart';
 import '../estilo.dart';
 import '../models/cliente.dart';
 import '../models/memoria.dart';
@@ -256,7 +257,7 @@ class _DetalheScreenState extends State<DetalheScreen> {
           Row(
             children: [
               Expanded(
-                child: BotaoGrande(
+                child: BotaoCustomizado(
                   texto: 'Editar',
                   icone: Icons.edit_outlined,
                   aoTocar: _editar,

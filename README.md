@@ -74,6 +74,10 @@ Ranking e Perfil aparecem no desenho e avisam que ainda não foram feitos.
 lib/
   main.dart                    aplicativo e tema
   estilo.dart                  cores, fontes e os pedaços de tela reutilizados
+  components/
+    campo_formulario_customizado.dart   rótulo + campo de texto, usado por
+                                        login e cadastro
+    botao_customizado.dart              botão principal, contornado e redondo
   database/
     database_helper.dart       o DAO: tabelas, dados de teste e todo o CRUD
     banco_io.dart              SQLite de Android, iOS e computador
@@ -90,6 +94,26 @@ O `banco_io.dart` e o `banco_web.dart` existem porque o SQLite é diferente em
 cada plataforma e o Dart escolhe o arquivo certo em tempo de compilação, com
 um import condicional dentro do `database_helper.dart`. Sem eles o aplicativo
 só rodaria no celular.
+
+## Refatoração (princípio DRY)
+
+Na primeira versão, cada campo das telas de login e de cadastro repetia o
+mesmo bloco de seis linhas: um rótulo, um `TextField` e a mesma
+`InputDecoration` com as cores do projeto. O mesmo acontecia com os botões.
+
+Esses pedaços foram extraídos para `lib/components/`:
+
+* **`CampoFormularioCustomizado`** – recebe `titulo` e `controlador` e monta o
+  rótulo em caixa alta mais o campo já estilizado. Aceita ainda tipo de
+  teclado, senha oculta, várias linhas, ícone à direita, mensagem de erro e
+  fonte de largura fixa (usada nas coordenadas do GPS).
+* **`BotaoCustomizado`** – o botão principal, que fica terracota quando pode
+  ser usado e bege quando o formulário ainda não está completo.
+* **`BotaoContornado`** e **`BotaoRedondo`** – as variações branca e circular.
+
+Com isso, um campo passou de seis linhas para uma chamada só, e a aparência
+dos botões de Entrar, Salvar e Editar é garantidamente a mesma, porque saem
+todos do mesmo widget.
 
 ## Modelagem do Banco de Dados
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../database/database_helper.dart';
+import '../components/botao_customizado.dart';
 import '../estilo.dart';
 import '../models/cliente.dart';
 import '../models/memoria.dart';
@@ -215,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: Fonte.corpo(tamanho: 13, cor: Cores.textoSuave),
               ),
               const SizedBox(height: 22),
-              BotaoBranco(
+              BotaoContornado(
                 texto: usuario == null ? 'Entrar em uma conta' : 'Sair',
                 icone: usuario == null ? Icons.login : Icons.logout,
                 aoTocar: () {
