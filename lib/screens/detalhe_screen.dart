@@ -43,12 +43,27 @@ class _DetalheScreenState extends State<DetalheScreen> {
     final idAvaliacao = _memoria.avaliacao.idAvaliacao;
     if (idAvaliacao == null || nota == _memoria.ranking) return;
 
-    await DatabaseHelper.instancia.atualizarNota(idAvaliacao, nota);
-    _mudouAlgo = true;
-    await _recarregar();
+    // Mesma protecao da tela de cadastro: a nota tem que respeitar o
+    // CHECK (avl_nu_ranking BETWEEN 1 AND 5) da tabela `avaliacao`.
+    if (nota < 1 || nota > 5) {
+      aviso(context, 'O Ranking deve ser uma nota de 1 a 5!', erro: true);
+      return;
+    }
 
-    if (!mounted) return;
-    aviso(context, 'Nota atualizada para $nota de 5.');
+    try {
+      await DatabaseHelper.instancia.atualizarNota(idAvaliacao, nota);
+      _mudouAlgo = true;
+      await _recarregar();
+
+      if (!mounted) return;
+      aviso(context, 'Nota atualizada para $nota de 5.');
+    } catch (erro, pilha) {
+      debugPrint('DEBUG - Erro ao atualizar a nota: $erro');
+      debugPrintStack(stackTrace: pilha);
+
+      if (!mounted) return;
+      aviso(context, 'Não foi possível atualizar a nota.', erro: true);
+    }
   }
 
   Future<void> _editar() async {
