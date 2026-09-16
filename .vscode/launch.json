@@ -1,0 +1,33 @@
+{
+  // Configuracoes usadas pelo F5 (Start Debugging) do VS Code.
+  // Escolha a configuracao desejada na aba "Run and Debug" (Ctrl+Shift+D).
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Modo normal do laboratorio: hot reload ligado e breakpoints ativos.
+      "name": "Coma Bem (debug)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug"
+    },
+    {
+      // Igual ao anterior, mas para quando o app for rodado no navegador.
+      "name": "Coma Bem (Chrome)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome"
+    },
+    {
+      // Mede a performance de verdade (o efeito do `const` aparece aqui).
+      // Nao use para depurar: em profile os breakpoints ficam desligados.
+      "name": "Coma Bem (profile)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "profile"
+    }
+  ]
+}

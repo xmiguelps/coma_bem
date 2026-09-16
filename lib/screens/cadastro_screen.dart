@@ -99,11 +99,35 @@ class _CadastroScreenState extends State<CadastroScreen> {
     super.dispose();
   }
 
-  bool get _podeSalvar =>
-      _nome.text.trim().isNotEmpty &&
-      _prato.text.trim().isNotEmpty &&
-      _tipoCulinaria.isNotEmpty &&
-      _nota > 0;
+  /// Indica se o formulario esta completo. Usado so para mostrar a dica
+  /// abaixo do botao; quem realmente barra a gravacao e [_validar].
+  bool get _podeSalvar => _validar() == null;
+
+  /// Validacao de front-end (depuracao preventiva).
+  ///
+  /// Devolve a mensagem do primeiro problema encontrado ou `null` quando
+  /// esta tudo certo. Conferir aqui, antes de tocar no banco, evita que o
+  /// SQLite recuse a gravacao e derrube o app: a tabela `restaurante` exige
+  /// NOT NULL no nome e no tipo de culinaria, e a tabela `avaliacao` tem
+  /// CHECK (avl_nu_ranking BETWEEN 1 AND 5) na nota.
+  String? _validar() {
+    if (_nome.text.trim().isEmpty || _prato.text.trim().isEmpty) {
+      return 'Preencha o nome do restaurante e o nome do prato!';
+    }
+
+    if (_tipoCulinaria.isEmpty) {
+      return 'Escolha o tipo de culinária do restaurante.';
+    }
+
+    // Bug do ranking: as estrelas devolvem 0 quando ninguem avaliou, e 0
+    // nao passa no CHECK do banco. O mesmo `if` tambem protege contra um
+    // valor acima de 5, caso a nota passe a vir digitada um dia.
+    if (_nota < 1 || _nota > 5) {
+      return 'O Ranking deve ser uma nota de 1 a 5!';
+    }
+
+    return null;
+  }
 
   // ==========================================================================
   // Geolocalizacao
@@ -315,6 +339,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
   // ==========================================================================
 
   Future<void> _salvar() async {
+    // 1. VALIDACAO DE FRONT-END (prevencao de bug)
+    // Antes de tentar salvar, conferimos se o basico foi preenchido.
+    final problema = _validar();
+    if (problema != null) {
+      aviso(context, problema, erro: true);
+      return; // O `return` encerra a funcao aqui: nada abaixo e executado.
+    }
+
     setState(() => _salvando = true);
 
     final anterior = widget.memoria;
@@ -349,6 +381,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
       anterior?.avaliacao.idUsuario ?? widget.usuario?.idUsuario,
     );
 
+    // 2. BLOCO TRY/CATCH (tratamento de excecoes)
+    // `try` significa "tente executar este codigo". Se o SQLite falhar
+    // (violacao de CHECK, banco ocupado, disco cheio...), o app nao fecha
+    // na cara do usuario: a execucao pula direto para o `catch`.
     try {
       await DatabaseHelper.instancia.salvarMemoria(
         Memoria(restaurante: restaurante, prato: prato, avaliacao: avaliacao),
@@ -363,10 +399,17 @@ class _CadastroScreenState extends State<CadastroScreen> {
             ? 'Memória atualizada com sucesso!'
             : 'Memória gastronômica salva!',
       );
-    } catch (erro) {
+    } catch (erro, pilha) {
+      // 3. DEPURACAO DE ERROS (catch)
+      // debugPrint mostra o erro exato no Debug Console do VS Code, e some
+      // sozinho na versao de release (ao contrario do print comum).
+      debugPrint('DEBUG - Erro ao salvar no SQLite: $erro');
+      debugPrintStack(stackTrace: pilha);
+
+      // Ja o usuario recebe uma mensagem amigavel.
       if (!mounted) return;
       setState(() => _salvando = false);
-      aviso(context, 'Não foi possível salvar: $erro', erro: true);
+      aviso(context, 'Ocorreu um erro inesperado ao salvar.', erro: true);
     }
   }
 
@@ -473,7 +516,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         ? 'Salvar alterações'
                         : 'Salvar restaurante',
                     carregando: _salvando,
-                    aoTocar: _podeSalvar ? _salvar : null,
+                    // O botao fica sempre ativo de proposito: quem avisa o
+                    // que falta e o SnackBar de _validar(), que explica o
+                    // erro, em vez de um botao apagado sem explicacao.
+                    aoTocar: _salvando ? null : _salvar,
                   ),
                   if (!_podeSalvar) ...[
                     const SizedBox(height: 12),
